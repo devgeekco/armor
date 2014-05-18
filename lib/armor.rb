@@ -15,12 +15,15 @@ module Armor
   #
   # The default value for hash is "sha512", and it can also be
   # configured via `ENV['ARMOR_HASH']`.
+  #
+  # The default value for length is default length of digest, it can be 
+  # configured via `ENV['ARMOR_HASH_LENGTH']`.
   def self.digest(password, salt)
-    iter = ENV["ARMOR_ITER"] || 5000
+    iter = ENV["ARMOR_ITER"].to_i || 5000
     hash = ENV["ARMOR_HASH"] || "sha512"
 
     digest = Digest.new(hash)
-    length = digest.digest_length
+    length = ENV["ARMOR_HASH_LENGTH"].to_i || digest.digest_length
 
     hex(pbkdf2(digest, password, salt, Integer(iter), length))
   end
